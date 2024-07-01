@@ -1,0 +1,11 @@
+Installing, building, and running
+Once you download this package, do:
+
+npm install
+To compile and build, do:
+
+npx tsc
+npm run build
+To run a local server:
+
+npm run dev

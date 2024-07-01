@@ -1,0 +1,66 @@
+// components/ProspectDetails.tsx
+
+import React, { useState } from 'react';
+import { Prospect, Task } from '../types';
+import Tasks from './Tasks';
+
+interface ProspectDetailsProps {
+  prospect: Prospect;
+  setProspect: React.Dispatch<React.SetStateAction<Prospect>>;
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}
+
+const ProspectDetails: React.FC<ProspectDetailsProps> = ({ prospect, setProspect, tasks, setTasks }) => {
+  const [activeTab, setActiveTab] = useState('Tasks');
+
+  return (
+    <div className="prospect-details">
+      <h2>{prospect.name}</h2>
+      <div className="tabs">
+        <button onClick={() => setActiveTab('Tasks')}>Tasks</button>
+        <button onClick={() => setActiveTab('Notes')}>Notes</button>
+        <button onClick={() => setActiveTab('Emails')}>Emails</button>
+      </div>
+      <div className="tab-content">
+        {activeTab === 'Tasks' && (
+          <Tasks tasks={tasks} setTasks={setTasks} prospectId={prospect.id} />
+        )}
+        {activeTab === 'Notes' && <div>Notes content here</div>}
+        {activeTab === 'Emails' && <div>Emails content here</div>}
+      </div>
+      <style jsx>{`
+        .prospect-details {
+          flex-grow: 1;
+          padding: 20px;
+          background-color: #f9f9f9;
+          border-left: 1px solid #ccc;
+        }
+        .tabs {
+          display: flex;
+          margin-bottom: 20px;
+        }
+        .tabs button {
+          padding: 10px;
+          margin-right: 10px;
+          border: none;
+          background-color: #0070f3;
+          color: white;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+        .tabs button:hover {
+          background-color: #005bb5;
+        }
+        .tab-content {
+          background-color: white;
+          padding: 20px;
+          border-radius: 4px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default ProspectDetails;

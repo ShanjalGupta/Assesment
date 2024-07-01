@@ -1,0 +1,100 @@
+
+
+import React, { useState } from 'react';
+import { Task, Prospect } from '../types';
+import { FaPlus, FaTrash, FaEdit } from 'react-icons/fa';
+
+interface TasksProps {
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  prospectId: number | null;
+}
+
+const Tasks: React.FC<TasksProps> = ({ tasks, setTasks, prospectId }) => {
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+
+  const handleAddTask = () => {
+    const newTask: Task = { id: Date.now(), title: newTaskTitle, completed: false, prospectId };
+    setTasks([...tasks, newTask]);
+    setNewTaskTitle('');
+  };
+
+  const handleToggleTask = (id: number) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
+  };
+
+  const handleDeleteTask = (id: number) => {
+    const updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
+  };
+
+  return (
+    <div className="tasks">
+      <div className="new-task">
+        <input
+          type="text"
+          placeholder="New Task"
+          value={newTaskTitle}
+          onChange={(e) => setNewTaskTitle(e.target.value)}
+          className="input"
+        />
+        <button onClick={handleAddTask} className="button">
+          <FaPlus />
+        </button>
+      </div>
+      <ul>
+        {tasks.filter(task => task.prospectId === prospectId).map((task) => (
+          <li key={task.id} className={`task ${task.completed ? 'completed' : ''}`}>
+            <span onClick={() => handleToggleTask(task.id)}>{task.title}</span>
+            <button onClick={() => handleDeleteTask(task.id)} className="button">
+              <FaTrash />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <style jsx>{`
+        .tasks {
+          margin-top: 20px;
+        }
+        .new-task {
+          display: flex;
+          margin-bottom: 10px;
+        }
+        .input {
+          flex-grow: 1;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+        .button {
+          padding: 8px;
+          background-color: #0070f3;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-left: 10px;
+        }
+        .button:hover {
+          background-color: #005bb5;
+        }
+        .task {
+          display: flex;
+          justify-content: space-between;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          margin-bottom: 5px;
+        }
+        .task.completed span {
+          text-decoration: line-through;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default Tasks;

@@ -1,0 +1,56 @@
+
+
+import React, { useState } from 'react';
+import ProspectTable from '../components/ProspectTable';
+import ProspectDetails from '../components/ProspectDetails';
+import { Prospect, Column, Task } from '../types';
+
+const initialProspects: Prospect[] = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890', status: 'Active', tasks: [] },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '098-765-4321', status: 'Inactive', tasks: [] },
+  // Add more example prospects
+];
+
+const initialColumns: Column[] = [
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'email', label: 'Email', type: 'text' },
+  { key: 'phone', label: 'Phone', type: 'text' },
+  { key: 'status', label: 'Status', type: 'text' },
+];
+
+const People = () => {
+  const [prospects, setProspects] = useState(initialProspects);
+  const [columns, setColumns] = useState(initialColumns);
+  const [selectedProspect, setSelectedProspect] = useState<Prospect | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  return (
+    <div className="people-page">
+      <ProspectTable
+        prospects={prospects}
+        setProspects={setProspects}
+        columns={columns}
+        setColumns={setColumns}
+        setSelectedProspect={setSelectedProspect}
+      />
+      {selectedProspect && (
+        <ProspectDetails
+          prospect={selectedProspect}
+          setProspect={(updatedProspect) => {
+            setProspects(prospects.map(p => p.id === updatedProspect.id ? updatedProspect : p));
+            setSelectedProspect(updatedProspect);
+          }}
+          tasks={tasks}
+          setTasks={setTasks}
+        />
+      )}
+      <style jsx>{`
+        .people-page {
+          display: flex;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default People;
